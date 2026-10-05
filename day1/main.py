@@ -6,8 +6,8 @@ load_dotenv()
 
 
 client = OpenAI(
-    api_key=os.getenv("TOKEN_HARBOR_API_KEY"),
-    base_url="https://tokenharbor.ai/v1"
+    api_key=os.getenv("GEMINI_API_KEY"),
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai"
 ) 
 
 user_input = ""
@@ -20,9 +20,11 @@ while user_input.lower() != "exit":
     user_input = input("-> ")
     message_history.append({"role": "user", "content": user_input})
     stream = client.chat.completions.create(
-        model="mimo-v2.6-flash:free",
+        model="gemini-3.5-flash",
         messages=message_history,
-        stream=True
+        stream=True,
+        temperature=0,
+        top_p=0.9,
     )
     message = ""
     for chunk in stream:
