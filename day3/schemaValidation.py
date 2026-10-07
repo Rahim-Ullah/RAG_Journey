@@ -14,6 +14,7 @@ class UserLogin(BaseModel):
     password: str = Field(..., min_length=6, max_length=20)
     
     @field_validator("password")
+    @classmethod
     def validate_password(cls, password: str) -> str:
         if not any(char.isupper() for char in password):
             raise ValueError("Password must contain at least one uppercase letter")

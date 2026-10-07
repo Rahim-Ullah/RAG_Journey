@@ -1,10 +1,16 @@
 import json
 from enum import Enum
+import os
+from dotenv import load_dotenv
 from typing import Optional
 from pydantic import BaseModel, Field
 from openai import OpenAI
 
-client = OpenAI()
+load_dotenv()
+client = OpenAI(
+    api_key=os.getenv("GEMINI_API_KEY"),
+    base_url="https://generativelanguage.googleapis.com/v1beta/openai"
+)
 
 SYSTEM_PROMPT = """You are TicketBot, an assistant that creates IT support tickets.
 
@@ -63,7 +69,7 @@ messages = [
 ]
 
 response = client.chat.completions.create(
-    model="gpt-4o",
+    model="gemini-3.1-flash-lite",
     messages=messages,
     tools=tools,
     tool_choice="auto"
@@ -91,5 +97,6 @@ if msg.tool_calls:
                 "content": result
             })
 
-    final = client.chat.completions.create(model="gpt-4o", messages=messages)
+    final = client.chat.completions.create(model="gemini-3.1-flash-lite", messages=messages)
     print(final.choices[0].message.content)
+
